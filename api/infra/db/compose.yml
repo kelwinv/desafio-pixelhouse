@@ -1,0 +1,8 @@
+services:
+  pixhouse_db:
+    container_name: pixhouse_db
+    image: postgres:16.0-alpine3.18
+    env_file:
+      - ../../.env.development
+    ports:
+      - 5439:5432
