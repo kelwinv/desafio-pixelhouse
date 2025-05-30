@@ -1,6 +1,7 @@
 // src/gift/entities/gift.entity.ts
 import { randomUUID } from 'crypto';
 import { Gift as prismaGift } from '@prisma/client';
+import { isURL } from 'class-validator';
 
 export class Gift {
   private readonly _id: string;
@@ -85,8 +86,7 @@ export class Gift {
       throw new Error('Image URL cannot be empty');
     }
 
-    const urlPattern = /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp)$/i;
-    if (!urlPattern.test(imageUrl)) {
+    if (!isURL(imageUrl)) {
       throw new Error('Invalid image URL format');
     }
   }
