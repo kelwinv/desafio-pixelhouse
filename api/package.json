@@ -21,11 +21,11 @@
     "test": "npm run test:setup && jest",
     "test:watch": "npm run test:setup && jest --watchAll",
     "test:cov": "npm run test:setup && jest --coverage",
-    "prisma:generate": "prisma generate --schema=infra/prisma/schema.prisma",
-    "prisma:studio": "prisma studio --schema=infra/prisma/schema.prisma",
-    "prisma:validate": "prisma validate --schema=infra/prisma/schema.prisma",
-    "prisma:migrate:dev": "prisma migrate dev --name init --schema=infra/prisma/schema.prisma",
-    "prisma:migrate:deploy": "prisma migrate deploy --schema=infra/prisma/schema.prisma"
+    "prisma:generate": "dotenv -e .env.development -- prisma generate --schema=infra/prisma/schema.prisma",
+    "prisma:studio": "dotenv -e .env.development -- prisma studio --schema=infra/prisma/schema.prisma",
+    "prisma:validate": "dotenv -e .env.development -- prisma validate --schema=infra/prisma/schema.prisma",
+    "prisma:migrate:dev": "dotenv -e .env.development -- prisma migrate dev --name init --schema=infra/prisma/schema.prisma",
+    "prisma:migrate:deploy": "dotenv -e .env.development -- prisma migrate deploy --schema=infra/prisma/schema.prisma"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -33,7 +33,9 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^11.0.1",
     "@prisma/client": "^6.8.2",
+    "class-validator": "^0.14.2",
     "dotenv": "^16.5.0",
+    "dotenv-cli": "^8.0.0",
     "mo": "^1.7.3",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
