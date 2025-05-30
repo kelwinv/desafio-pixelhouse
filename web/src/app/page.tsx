@@ -71,7 +71,6 @@ export default function Home() {
   useEffect(() => {
     const fetchGifts = async () => {
       const gifts = await getAllGifts();
-      console.log(gifts);
 
       setGifts(gifts);
       setTotalPrice(gifts.reduce((acc, gift) => acc + gift.basePrice, 0));

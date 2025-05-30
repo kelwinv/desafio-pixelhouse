@@ -1,8 +1,8 @@
 import { typeGift } from "@/app/type/gift";
-import { formatPrice } from "@/app/utils/formatPrice";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { formatPrice } from "@/lib/utils";
 import { Calendar, Edit, Trash2 } from "lucide-react";
 import { DateTime } from "luxon";
 import Image from "next/image";

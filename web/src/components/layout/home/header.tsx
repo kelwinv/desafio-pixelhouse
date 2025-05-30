@@ -1,7 +1,7 @@
 import { BarChart3, DollarSign, Gift, Plus } from "lucide-react";
-import { formatPrice } from "../../../app/utils/formatPrice";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { formatPrice } from "@/lib/utils";
 
 type HomeHeaderProps = {
   giftsQuantity?: number;
