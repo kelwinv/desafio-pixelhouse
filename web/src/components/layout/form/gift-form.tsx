@@ -15,12 +15,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Gift, Save, X, Loader2 } from "lucide-react";
 import { toast, Toaster } from "sonner";
 import { useGifts } from "@/app/hooks/useGifts";
-import { typeGift as TypeGift } from "@/app/type/gift";
+import { typeGift, typeGift as TypeGift } from "@/app/type/gift";
 
 type GiftFormProps = {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (gift: TypeGift) => void;
+  onSubmit: (gift: TypeGift, editable?: boolean) => void;
   formData: {
     title: string;
     image: string;
@@ -33,7 +33,7 @@ type GiftFormProps = {
     description: string;
     basePrice: string;
   }) => void;
-  editingGift?: boolean;
+  editingGift?: typeGift | null;
 };
 
 const GiftForm = ({
@@ -46,7 +46,7 @@ const GiftForm = ({
 }: GiftFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const { createGift } = useGifts();
+  const { createGift, updateGift } = useGifts();
 
   const handleSubmit = async () => {
     if (!formData.title || !formData.description || !formData.basePrice) {
@@ -58,6 +58,16 @@ const GiftForm = ({
 
     setIsLoading(true);
 
+    if (editingGift) {
+      await handleEditGift();
+    } else {
+      await handleAddGift();
+    }
+
+    setIsLoading(false);
+  };
+
+  const handleAddGift = async () => {
     try {
       const gift = await createGift({
         title: formData.title,
@@ -67,9 +77,7 @@ const GiftForm = ({
       });
 
       toast("Presente adicionado!", {
-        description: `${formData.title} foi ${
-          editingGift ? "atualizado" : "adicionado"
-        } com sucesso.`,
+        description: `${formData.title} foi adicionado com sucesso.`,
       });
 
       onSubmit(gift);
@@ -85,8 +93,36 @@ const GiftForm = ({
       toast.error("Erro ao salvar", {
         description: "Não foi possível salvar o presente. Tente novamente.",
       });
-    } finally {
-      setIsLoading(false);
+    }
+  };
+
+  const handleEditGift = async () => {
+    if (!editingGift) return;
+    try {
+      const gift = await updateGift(editingGift.id, {
+        title: formData.title,
+        imageUrl: formData.image,
+        description: formData.description,
+        basePrice: parseFloat(formData.basePrice),
+      });
+
+      toast("Presente Atualizado!", {
+        description: `${formData.title} foi atualizado com sucesso.`,
+      });
+
+      onSubmit(gift, true);
+      onClose();
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error("Erro ao Atualizar", {
+          description: error.message,
+        });
+        return;
+      }
+
+      toast.error("Erro ao Atualizar", {
+        description: "Não foi possível atualizar o presente. Tente novamente.",
+      });
     }
   };
 

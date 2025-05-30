@@ -16,6 +16,7 @@ export default function Home() {
     basePrice: "",
   });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingGift, setEditingGift] = useState<typeGift | null>(null);
   const [totalPrice, setTotalPrice] = useState(0);
   const [gifts, setGifts] = useState<typeGift[]>([]);
   const { getAllGifts, deleteGift } = useGifts();
@@ -46,6 +47,27 @@ export default function Home() {
     }
   };
 
+  const openEditDialog = (gift: typeGift) => {
+    setFormData({
+      title: gift.title,
+      image: gift.imageUrl || "",
+      description: gift.description,
+      basePrice: gift.basePrice.toString(),
+    });
+    setEditingGift(gift);
+    setIsDialogOpen(true);
+  };
+
+  const handleGiftSubmit = (newGift: typeGift, editable?: boolean) => {
+    setIsDialogOpen(false);
+
+    setGifts((prevGifts) =>
+      editable
+        ? prevGifts.map((gift) => (gift.id === newGift.id ? newGift : gift))
+        : [...prevGifts, newGift]
+    );
+  };
+
   useEffect(() => {
     const fetchGifts = async () => {
       const gifts = await getAllGifts();
@@ -68,17 +90,15 @@ export default function Home() {
         gifts={gifts}
         openAddDialog={openAddDialog}
         onDelete={handleDeleteGift}
-        onEdit={() => {}}
+        onEdit={openEditDialog}
         onViewDetails={() => {}}
       />
 
       <GiftForm
+        editingGift={editingGift}
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
-        onSubmit={(newGift) => {
-          setIsDialogOpen(false);
-          setGifts((oldState) => [...oldState, newGift]);
-        }}
+        onSubmit={handleGiftSubmit}
         formData={formData}
         setFormData={setFormData}
       />
